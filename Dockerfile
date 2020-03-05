@@ -4,15 +4,15 @@ EXPOSE 80
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY ["src/App/Console/SimpleBanking.ConsoleApp.csproj","dotnetcore/"]
-RUN dotnet restore "dotnetcore/SimpleBanking.ConsoleApp.csproj"
+COPY ["src/Gateway/Gateway.WebApi/Gateway.WebApi.csproj","dotnetcore/"]
+RUN dotnet restore "dotnetcore/Gateway.WebApi.csproj"
 COPY . .
 WORKDIR "/src/dotnetcore"
-RUN dotnet build "SimpleBanking.ConsoleApp.csproj" -c Release -o /app
+RUN dotnet build "Gateway.WebApi.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "SimpleBanking.ConsoleApp.csproj" -c Release -o /app
+RUN dotnet publish "Gateway.WebApi.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet","Transaction.WebApi.dll"]
+ENTRYPOINT ["dotnet","Gateway.WebApi.dll"]
