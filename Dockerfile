@@ -4,15 +4,15 @@ EXPOSE 80
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY ["","dotnetcore/"]
-RUN dotnet restore ""
+COPY ["src/Services/Transaction/Transaction.WebApi.csproj","dotnetcore/"]
+RUN dotnet restore "src/Services/Transaction/Transaction.WebApi.csproj"
 COPY . .
 WORKDIR "/src/dotnetcore"
-RUN dotnet build "" -c Release -o /app
+RUN dotnet build "Transaction.WebApi.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "" -c Release -o /app
+RUN dotnet publish "Transaction.WebApi.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet",""]
+ENTRYPOINT ["dotnet","Transaction.WebApi.dll"]
